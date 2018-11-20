@@ -1,5 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Welcome</h1>
-{% endblock %}
+    <div class="container-fluid">
+    <div class="row">
+    {% for product in products %}
+                    <div class="col-sm-4 col-lg-4 col-md-4">
+                        <div class="thumbnail">
+                            <img src="{{MEDIA_URL}}{{product.image}}" alt="">
+                            <div class="caption">
+                                <h4 class="pull-right">€{{product.price}}</h4>
+                                <h4><a href="{% url 'product_detail' product.id %}">{{product.name}}</a>
+                                </h4>
+                                <p>{{product.brand}}</p>
+                                
+                                <form method="POST" action="#">
+                                    <input type="number" name="quantity" value="1"/>
+                                    <input class="btn btn-primary" type="submit" value="Add to cart"/>
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+    {% endfor %}
+    </div>
+    </div>
+    
+{% endblock content %}
