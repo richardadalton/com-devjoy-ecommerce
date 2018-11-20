@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>    
+            <th>Product</th>    
+            <th>Quantity</th>    
+            <th>Price</th>
+            <th>Total</th> 
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for item in cart_items %}
+        <tr>
+            <td><img width="150" height="75" src="{{ MEDIA_URL }}{{ item.image}}"/></td>    
+            <td>{{ item.name }}</td>    
+            <td>{{ item.quantity }}</td>    
+            <td>€{{ item.price }}</td>
+            <td>€{{ item.total }}</td>
+            <td><form method="post" action="#">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-success" value="Remove"/>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+
+
+
+
+
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><strong>Total:</strong></td>
+            <td><strong>€300</strong></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<a href="#" class="btn btn-success" role="button">Checkout</a>
+
+{% endblock %}

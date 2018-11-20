@@ -19,11 +19,14 @@ from django.views.static import serve
 from django.conf import settings
 from accounts.views import signup, show_profile
 from products.views import product_list, product_detail
+from cart.views import add_to_cart, view_cart
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', product_list, name="home"),
     path('products/<int:id>', product_detail, name="product_detail"),
+    path('cart/add/', add_to_cart, name='add_to_cart'),
+    path('cart/view/', view_cart, name='view_cart'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', signup, name='signup'),
     path('accounts/profile/', show_profile, name='profile'),
