@@ -1,33 +1,10 @@
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from products.models import Product
-
+from .forms import MakePaymentForm
 
 
 # Create your views here.
-def add_to_cart(request):
-    product_id = request.POST['product'] 
-    quantity = int(request.POST['quantity'])
-    
-    cart = request.session.get('cart', {})
-    cart[product_id] = cart.get(product_id, 0) + quantity
-    request.session['cart'] = cart
-
-    return redirect("/")
-    
-    
-def remove_from_cart(request):
-    product_id = request.POST['product']
-
-    cart = request.session.get('cart', {})
-    del cart[product_id]
-
-    request.session['cart'] = cart
-
-    return redirect("/cart/view/")    
-   
-   
-    
-def view_cart(request):
+def show_checkout(request):
     cart = request.session.get('cart', {})
     
     cart_items = []
@@ -50,5 +27,8 @@ def view_cart(request):
         })
         cart_total += item_total
 
-    return render(request, "cart/view_cart.html", {'cart_items': cart_items, 'cart_total': cart_total})
 
+    
+    form = MakePaymentForm()
+
+    return render(request, "checkout/checkout.html", {'cart_items': cart_items, 'cart_total': cart_total, 'payment_form': form})
