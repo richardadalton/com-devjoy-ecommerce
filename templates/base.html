@@ -42,8 +42,11 @@
                         <li><a href="{% url 'signup' %}"><i class="fa fa-user-plus"></i> Sign up</a></li>
                         <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> Log In</a></li>
                     {% endif %}
-                    <li><a href="{% url 'view_cart' %}"><i class="fa fa-shopping-cart"></i> Cart                        
-                        <label class="badge badge-light">{{ items_in_cart }}</label></a>
+                    <li><a href="{% url 'view_cart' %}"><i class="fa fa-shopping-cart"></i> Cart
+                        {% if items_in_cart > 0 %}
+                        <label class="badge badge-light">{{ items_in_cart }}</label>
+                        {% endif %}
+                        </a>
                     </li>
                 </ul>
             </div>
