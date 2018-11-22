@@ -20,7 +20,7 @@ from django.conf import settings
 from accounts.views import signup, show_profile
 from products.views import product_list, product_detail
 from cart.views import add_to_cart, remove_from_cart, view_cart
-from checkout.views import show_checkout
+from checkout.views import show_checkout, submit_payment
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,8 @@ urlpatterns = [
     path('cart/remove/', remove_from_cart, name='remove_from_cart'),
     path('cart/view/', view_cart, name='view_cart'),
     path('checkout/view/', show_checkout, name='show_checkout'),
+    path('checkout/pay/', submit_payment, name='submit_payment'),
+    
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', signup, name='signup'),
     path('accounts/profile/', show_profile, name='profile'),

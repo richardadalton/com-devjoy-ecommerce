@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, HttpResponse
 from products.models import Product
 from .forms import MakePaymentForm, OrderForm
+from .models import Order
 
 def get_cart_items_and_total(cart):
     cart_items = []
@@ -42,3 +43,12 @@ def show_checkout(request):
     context.update(cart_items_and_total)
     
     return render(request, "checkout/checkout.html", context)
+
+
+def submit_payment(request):
+    
+    order_form = OrderForm(request.POST)
+    if order_form.is_valid():
+        order = order_form.save()
+        
+    return HttpResponse(str(order.id))
