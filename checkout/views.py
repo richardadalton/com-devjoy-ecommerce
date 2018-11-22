@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, HttpResponse
 from products.models import Product
 from .forms import MakePaymentForm, OrderForm
-from .models import Order
+from .models import OrderLineItem
 
 def get_cart_items_and_total(cart):
     cart_items = []
@@ -50,5 +50,13 @@ def submit_payment(request):
     order_form = OrderForm(request.POST)
     if order_form.is_valid():
         order = order_form.save()
+        
+        cart = request.session.get('cart', {})
+        for product_id, quantity in cart.items():
+            line_item = OrderLineItem()
+            line_item.product_id = product_id
+            line_item.quantity = quantity
+            line_item.order = order
+            line_item.save()
         
     return HttpResponse(str(order.id))
