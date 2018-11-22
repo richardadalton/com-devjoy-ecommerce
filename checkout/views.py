@@ -1,12 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from products.models import Product
-from .forms import MakePaymentForm
+from .forms import MakePaymentForm, OrderForm
 
-
-# Create your views here.
-def show_checkout(request):
-    cart = request.session.get('cart', {})
-    
+def get_cart_items_and_total(cart):
     cart_items = []
     cart_total = 0
     
@@ -26,9 +22,23 @@ def show_checkout(request):
             'total': item_total
         })
         cart_total += item_total
-
-
     
-    form = MakePaymentForm()
+    return { 'cart_items': cart_items, 'cart_total': cart_total }
+    
+    
 
-    return render(request, "checkout/checkout.html", {'cart_items': cart_items, 'cart_total': cart_total, 'payment_form': form})
+
+
+# Create your views here.
+def show_checkout(request):
+    
+    cart = request.session.get('cart', {})
+    cart_items_and_total = get_cart_items_and_total(cart)
+
+    payment_form = MakePaymentForm()
+    order_form = OrderForm()
+    context = { 'order_form': order_form, 'payment_form': payment_form }
+    
+    context.update(cart_items_and_total)
+    
+    return render(request, "checkout/checkout.html", context)
