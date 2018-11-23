@@ -23,7 +23,7 @@ def remove_from_cart(request):
 
     request.session['cart'] = cart
 
-    return redirect("/cart/view/")    
+    return redirect("view_cart")    
    
    
     

@@ -16,7 +16,6 @@
     {% block head_js %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
     {% endblock head_js %}
 </head>
 <body>
@@ -35,6 +34,7 @@
             
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'product_detail' 1 %}">Product</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'profile' %}"><i class="fa fa-user"></i> Profile</a></li>
                         <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Log Out</a></li>
