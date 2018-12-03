@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+    <a href="{% url 'home' %}">Home</a>
+    {% for crumb in breadcrumbs %}
+    > <a href="{% url 'home' %}?category={{ crumb.id }}">{{ crumb.name }}</a>
+    {% endfor %}
+    
+
     <div class="container-fluid">
     <div class="row">
     {% for product in products %}

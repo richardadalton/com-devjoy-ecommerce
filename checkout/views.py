@@ -31,9 +31,6 @@ def get_cart_items_and_total(cart):
     
     return { 'cart_items': cart_items, 'cart_total': cart_total }
     
-    
-
-
 
 # Create your views here.
 def show_checkout(request):
@@ -50,48 +47,53 @@ def show_checkout(request):
     return render(request, "checkout/checkout.html", context)
 
 
-def submit_payment(request):
-    
-    cart = request.session.get('cart', {})
-    cart_items_and_total = get_cart_items_and_total(cart)
 
+
+def save_order(order_form, cart):
+    order = order_form.save()
+    for product_id, quantity in cart.items():
+        line_item = OrderLineItem()
+        line_item.product_id = product_id
+        line_item.quantity = quantity
+        line_item.order = order
+        line_item.save()
+    return order    
+
+def charge_card(amount, description, stripe_token):
+    # try:
+    total_in_cent = int(amount*100)
+    return stripe.Charge.create(
+        amount=total_in_cent,
+        currency="EUR",
+        description=description,
+        card=stripe_token,
+    )
+    # except stripe.error.CardError:
+    #     messages.error(request, "Your card was declined!")
+
+
+
+def submit_payment(request):
     payment_form = MakePaymentForm(request.POST)    
     order_form = OrderForm(request.POST)
-    
+    cart = request.session.get('cart', {})
+
     if order_form.is_valid() and payment_form.is_valid():
-        
-        # Save the Order to the Database
-        order = order_form.save()
-        cart = request.session.get('cart', {})
-        for product_id, quantity in cart.items():
-            line_item = OrderLineItem()
-            line_item.product_id = product_id
-            line_item.quantity = quantity
-            line_item.order = order
-            line_item.save()
-        
-        
-        # Grab the money and run
+        order = save_order(order_form, cart)        
+        cart_items_and_total = get_cart_items_and_total(cart)
         total = cart_items_and_total['cart_total']
         stripe_token=payment_form.cleaned_data['stripe_id']
-
-        try:
-            total_in_cent = int(total*100)
-            customer = stripe.Charge.create(
-                amount=total_in_cent,
-                currency="EUR",
-                description="Dummy Transaction",
-                card=stripe_token,
-            )
-
-        except stripe.error.CardError:
-            messages.error(request, "Your card was declined!")
-
+        customer = charge_card(total, str(order), stripe_token)
+        
         if customer.paid:
             messages.error(request, "You have successfully paid")
-
+        
         # Clear the cart
         del request.session['cart']   
         
         # Redirect to home
         return redirect("/")
+    else:
+        messages.error(request, "There was an error charging your card")
+
+

@@ -34,7 +34,6 @@
             
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'product_detail' 1 %}">Product</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'profile' %}"><i class="fa fa-user"></i> Profile</a></li>
                         <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Log Out</a></li>
@@ -65,8 +64,15 @@
     
     <div class="container">
         <br>
+        <div class="col-md-3">
+                {% for category in categories %}
+                <p><a href="{% url 'home' %}?category={{ category.id }}">{{category.name}}</a></p>
+                {% endfor %}
+        </div>
+        <div class="col-md-9">
         <div class="row">
         {% block content %} {% endblock %}
+        </div>
         </div>
     </div>
     <footer>

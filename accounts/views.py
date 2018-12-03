@@ -2,6 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from .forms import SignUpForm, ProfileForm
 
+
 def show_profile(request):
     return render(request, "profile.html")
 
